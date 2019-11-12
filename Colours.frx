@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="10/22/2019 12:09:37" ReportInfo.Modified="11/12/2019 16:49:00" ReportInfo.CreatorVersion="2019.4.4.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+
+
+    private void Data2_BeforePrint(object sender, EventArgs e)
+    {                                                                    
+      System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml((String)Report.GetColumnValue(&quot;JSON.item.set.item.color&quot;));                         
+      Shape1.Fill = new SolidFill(col);
+      Shape1.Border.Color = col;
+    }
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <JsonDataSourceConnection Name="Connection" ConnectionString="rijcmlqzRsSoAbeFAGZnxfVDHfNYDXf9dLe8XU0u6pAA29cSzigaRas1j+O2nRE1/Afyp3j10SzNF/s8sUD9Ib09sZWYYUpCTQLbtrDoAi7i3Qj03uNP5dtTv2RBtHGi2pYJJY3bNhp4rDP/yO5DNQfQlCzrQ/NTb2+VfKLnqiwoe+7m8pzOS8Nuz68ctfGI4QJDKB/9sFDPA1Ic/1/ZgFe1u9AfrFq7wHEO/MLU1mVx0Dy8zcW5GlUqCNcliJaQZpyrq/6l7FkarHx0dmKqlWXzifJB1GlYhUQT25EeWiWpcIu9CLQiB644GILX+TfMjoVhGsZrOVfWhv7UevsIE4QBJm+Q4Qlu5XkidqRJDqfRZS25t7kruVu33K3FxGn4x/L7Q6sszTI8g6/ihUOKlynHcOQ+RUZ+ACsx27oDkQB9an2P1E=" LoginPrompt="true">
+      <JsonTableDataSource Name="JSON" DataType="FastReport.Data.JsonConnection.JsonParser.JsonArray" Enabled="true" TableName="JSON">
+        <Column Name="index" DataType="System.Int32"/>
+        <Column Name="item" DataType="FastReport.JsonBase">
+          <Column Name="name" DataType="System.String"/>
+          <Column Name="image" DataType="System.String"/>
+          <JsonTableDataSource Name="set" DataType="FastReport.JsonBase" Enabled="true">
+            <Column Name="index" DataType="System.Int32"/>
+            <Column Name="item" DataType="FastReport.JsonBase">
+              <Column Name="name" DataType="System.String"/>
+              <Column Name="color" DataType="System.String"/>
+            </Column>
+            <Column Name="array" DataType="FastReport.JsonBase"/>
+          </JsonTableDataSource>
+        </Column>
+        <Column Name="array" DataType="FastReport.JsonBase"/>
+        <Column Name="Column" Alias="Img" DataType="System.Byte[]" Calculated="true" Expression="System.Convert.FromBase64String([JSON.item.image])"/>
+      </JsonTableDataSource>
+    </JsonDataSourceConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <PageHeaderBand Name="PageHeader1" Width="718.2" Height="56.7">
+      <TextObject Name="Text1" Width="406.35" Height="56.7" Text="Set the world on color" VertAlign="Center" Font="Calibri, 28pt, style=Bold"/>
+      <TextObject Name="Text6" Left="642.6" Width="94.5" Height="56.7" Text="[PageN]" VertAlign="Center" Font="Calibri, 16pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="60.7" Width="718.2" Height="387.45" Border.ShadowWidth="0" Border.ShadowColor="Transparent" BeforePrintEvent="Data1_BeforePrint" DataSource="JSON" PrintIfDetailEmpty="true">
+      <PictureObject Name="Picture1" Left="141.75" Width="349.65" Height="387.45" DataColumn="JSON.Img" SizeMode="StretchImage"/>
+      <TextObject Name="Text3" Width="141.75" Height="387.45" Fill.Color="WhiteSmoke" Text="[JSON.item.name]" HorzAlign="Center" VertAlign="Center" Angle="270" Font="Calibri, 28pt"/>
+      <DataBand Name="Data2" Top="452.15" Width="718.2" Height="66.15" BeforePrintEvent="Data2_BeforePrint" DataSource="set">
+        <TextObject Name="Text5" Width="141.75" Height="66.15" Fill.Color="WhiteSmoke" HorzAlign="Center" VertAlign="Center" Font="Arial, 28pt"/>
+        <TextObject Name="Text2" Top="9.45" Width="132.3" Height="18.9" Text="[JSON.item.set.item.name]" HorzAlign="Right" Font="Calibri, 12pt, style=Bold"/>
+        <TextObject Name="Text4" Top="28.35" Width="132.3" Height="18.9" Text="[JSON.item.set.item.color]" HorzAlign="Right" Font="Calibri, 12pt, style=Bold"/>
+        <ShapeObject Name="Shape1" Left="141.75" Width="577.58" Height="66.15"/>
+      </DataBand>
+    </DataBand>
+  </ReportPage>
+</Report>
